@@ -11,6 +11,7 @@ import {
   TouchableNativeFeedback,
   TouchableWithoutFeedback,
 } from 'react-native';
+import isEqual from 'lodash.isequal';
 
 import { withTheme, ViewPropTypes } from '../config';
 import { renderNode, nodeType } from '../helpers';
@@ -32,7 +33,7 @@ const defaultEditButton = {
   underlayColor: '#000',
 };
 
-const Avatar = ({
+const AvatarComponent = ({
   onPress,
   onLongPress,
   Component = onPress || onLongPress ? TouchableOpacity : View,
@@ -134,8 +135,8 @@ const Avatar = ({
         PlaceholderContent={PlaceholderContent}
         containerStyle={StyleSheet.flatten([
           styles.overlayContainer,
-          overlayContainerStyle,
           rounded && { borderRadius: width / 2, overflow: 'hidden' },
+          overlayContainerStyle,
         ])}
         source={source}
         {...imageProps}
@@ -162,7 +163,6 @@ const styles = StyleSheet.create({
   },
   overlayContainer: {
     flex: 1,
-    backgroundColor: '#bdbdbd',
   },
   title: {
     color: '#ffffff',
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
 });
 
-Avatar.propTypes = {
+AvatarComponent.propTypes = {
   Component: PropTypes.oneOf([
     View,
     TouchableOpacity,
@@ -230,7 +230,7 @@ Avatar.propTypes = {
   ImageComponent: PropTypes.elementType,
 };
 
-Avatar.defaultProps = {
+AvatarComponent.defaultProps = {
   showEditButton: false,
   onEditPress: null,
   size: 'small',
@@ -238,5 +238,6 @@ Avatar.defaultProps = {
   ImageComponent: RNImage,
 };
 
+const Avatar = React.memo(AvatarComponent, isEqual);
 export { Avatar };
 export default withTheme(Avatar, 'Avatar');
